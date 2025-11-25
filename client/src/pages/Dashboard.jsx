@@ -61,15 +61,7 @@ export default function Dashboard() {
           <p className="font-medium text-slate-700">Create Resume</p>
         </button>
 
-        <button
-          onClick={handleUpload}
-          className="h-56 w-50 flex flex-col items-center justify-center bg-white rounded-xl border border-dashed border-indigo-300 hover:shadow-lg hover:border-indigo-500 transition-all"
-        >
-          <div className="w-14 h-14 rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 flex items-center justify-center mb-3">
-            <FiUploadCloud className="text-white text-3xl" />
-          </div>
-          <p className="font-medium text-slate-700">Upload Existing</p>
-        </button>
+       
       </section>
 
       {/* Resume Cards */}
