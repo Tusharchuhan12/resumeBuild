@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 export default function CallTo() {
+    const navigate = useNavigate();
     return (
         <>
             <style>
@@ -72,9 +74,13 @@ export default function CallTo() {
 
                     {/* Call to Action Button */}
                     <div className="rainbow relative z-0 bg-white/15 overflow-hidden p-0.5 flex items-center justify-center rounded-full hover:scale-105 transition duration-300 active:scale-100 mt-6">
-                        <button className="px-8 text-sm py-3 text-white rounded-full font-medium bg-gray-900/80 backdrop-blur">
+                        <button
+                            className="px-8 text-sm py-3 text-white rounded-full font-medium bg-gray-900/80 backdrop-blur"
+                            onClick={() => navigate("/layout")}
+                        >
                             View My Resume
                         </button>
+
                     </div>
                 </div>
             </div>
