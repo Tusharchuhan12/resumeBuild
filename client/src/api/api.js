@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const BASE_URL =
+    import.meta.env.MODE === "development"
+        ? "http://localhost:3000/api"
+        : "https://resumebuild-k908.onrender.com/api";
+
 const api = axios.create({
-    baseURL: "https://resumebuild-k908.onrender.com/api",
+    baseURL: BASE_URL,
+    withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {

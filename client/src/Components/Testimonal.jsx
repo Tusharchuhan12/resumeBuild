@@ -2,21 +2,21 @@ const Testimonal = () => {
     const cardsData = [
         {
             image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=200',
-            name: 'Briar Martin',
+            name: 'Tushar chauahn',
             handle: 'Client',
             feedback: 'Working with Tushar was seamless. The project exceeded expectations!',
             date: 'April 20, 2025'
         },
         {
             image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200',
-            name: 'Avery Johnson',
+            name: 'karan rana',
             handle: 'Project Partner',
             feedback: 'Tushar’s coding skills and attention to detail brought our idea to life.',
             date: 'May 10, 2025'
         },
         {
             image: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&auto=format&fit=crop&q=60',
-            name: 'Jordan Lee',
+            name: 'prashant pal',
             handle: 'Collaborator',
             feedback: 'Highly professional and creative developer. Loved the outcome!',
             date: 'June 5, 2025'

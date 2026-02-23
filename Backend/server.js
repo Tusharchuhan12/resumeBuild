@@ -1,27 +1,45 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import morgan from "morgan";
 
 import connectDB from "./config/db.js";
-import authRoutes from './routes/authRoutes.js'
-import morgan from "morgan";
+import authRoutes from "./routes/authRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
+
 dotenv.config();
 connectDB();
 
-const app = express();      // <-- STEP 1 (VERY IMPORTANT)
+const app = express();
 
-app.use(morgan("dev"));     // <-- STEP 2
-app.use(express.json());    // <-- STEP 3
-app.use(cors());            // <-- STEP 4`
-console.log("Auth Routes Loaded") 
+// ✅ Proper CORS Configuration
+app.use(
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "https://resume-build-nine-rho.vercel.app"
+        ],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+    })
+);
 
-app.use("/api/auth", authRoutes);   // <-- STEP 5
+// ✅ Middlewares
+app.use(express.json());
+app.use(morgan("dev"));
+
+// ✅ Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/resumes", resumeRoutes);
+
 app.get("/", (req, res) => {
     res.send("API is running...");
 });
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+// ✅ Proper PORT for Render
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

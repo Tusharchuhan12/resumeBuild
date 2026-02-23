@@ -1,7 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../api/api";
 
-// REGISTER
+// ------------------ SAFE LOCALSTORAGE PARSE ------------------
+const getUserFromStorage = () => {
+    try {
+        const user = localStorage.getItem("user");
+        if (!user || user === "undefined") return null;
+        return JSON.parse(user);
+    } catch (error) {
+        return null;
+    }
+};
+
+const getTokenFromStorage = () => {
+    try {
+        const token = localStorage.getItem("token");
+        return token || "";
+    } catch {
+        return "";
+    }
+};
+
+// ------------------ REGISTER ------------------
 export const registerUser = createAsyncThunk(
     "auth/register",
     async (formData, { rejectWithValue }) => {
@@ -9,12 +29,14 @@ export const registerUser = createAsyncThunk(
             const res = await api.post("/auth/register", formData);
             return res.data; // { success, message, token, user }
         } catch (err) {
-            return rejectWithValue(err.response?.data?.message || "Register Failed");
+            return rejectWithValue(
+                err.response?.data?.message || "Register Failed"
+            );
         }
     }
 );
 
-// LOGIN
+// ------------------ LOGIN ------------------
 export const loginUser = createAsyncThunk(
     "auth/login",
     async (formData, { rejectWithValue }) => {
@@ -22,23 +44,19 @@ export const loginUser = createAsyncThunk(
             const res = await api.post("/auth/login", formData);
             return res.data; // { success, message, token, user }
         } catch (err) {
-            return rejectWithValue(err.response?.data?.message || "Login Failed");
+            return rejectWithValue(
+                err.response?.data?.message || "Login Failed"
+            );
         }
     }
 );
 
-// 🔹 Fix for refresh: check localStorage
-const userFromStorage = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))
-    : null;
-
-const tokenFromStorage = localStorage.getItem("token") || "";
-
+// ------------------ INITIAL STATE ------------------
 const authSlice = createSlice({
     name: "auth",
     initialState: {
-        user: userFromStorage,  // restore user from localStorage
-        token: tokenFromStorage,
+        user: getUserFromStorage(),
+        token: getTokenFromStorage(),
         loading: false,
         error: null,
     },
@@ -47,44 +65,47 @@ const authSlice = createSlice({
             state.user = null;
             state.token = "";
             localStorage.removeItem("token");
-            localStorage.removeItem("user"); // remove user as well
+            localStorage.removeItem("user");
         },
     },
-
     extraReducers: (builder) => {
         builder
-            // ------------------ REGISTER ------------------
+            // REGISTER
             .addCase(registerUser.pending, (state) => {
                 state.loading = true;
+                state.error = null;
             })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = null;
-
                 state.user = action.payload.user;
                 state.token = action.payload.token;
 
-                // Save in localStorage
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(action.payload.user)
+                );
                 localStorage.setItem("token", action.payload.token);
-                localStorage.setItem("user", JSON.stringify(action.payload.user));
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             })
 
-            // ------------------ LOGIN ------------------
+            // LOGIN
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
+                state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload.user;
                 state.token = action.payload.token;
-                state.error = null;
 
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(action.payload.user)
+                );
                 localStorage.setItem("token", action.payload.token);
-                localStorage.setItem("user", JSON.stringify(action.payload.user));
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
